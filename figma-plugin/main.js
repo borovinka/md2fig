@@ -142,18 +142,29 @@ async function renderDoc(doc) {
       frame.appendChild(textNode);
       rootFrame.appendChild(frame);
     } else if (block.type === "list") {
-      const listFrame = figma.createFrame();
-      setAutoLayout(listFrame, { mode: "VERTICAL", spacing: 4, alignItems: "MIN" });
-      for (const item of block.items) {
-        const row = figma.createFrame();
-        setAutoLayout(row, { mode: "HORIZONTAL", spacing: 8, alignItems: "MIN" });
-        const bullet = await createFormattedText(item.marker, [], { fontFamily: "Roboto", fontStyle: "Regular", fontSize: 12, fills: [TOKENS.panelText] });
-        const text = await createFormattedText(item.text, item.spans, { fontFamily: "Roboto", fontStyle: "Regular", fontSize: 12, fills: [TOKENS.panelText] });
-        row.appendChild(bullet);
-        row.appendChild(text);
-        listFrame.appendChild(row);
+      // Render list using text list properties instead of separate bullet frames
+      const lines = block.items.map(it => it.text);
+      const combined = lines.join("\n");
+      const spans = [];
+      let offset = 0;
+      for (const it of block.items) {
+        if (Array.isArray(it.spans)) {
+          for (const sp of it.spans) {
+            spans.push({ start: offset + sp.start, end: offset + sp.end, style: sp.style });
+          }
+        }
+        offset += it.text.length + 1; // include newline
       }
-      rootFrame.appendChild(listFrame);
+      const baseStyle = { fontFamily: "Roboto", fontStyle: "Regular", fontSize: 12, fills: [TOKENS.panelText] };
+      const node = await createFormattedText(combined, spans, baseStyle);
+      try {
+        if (typeof node.setRangeListOptions === "function") {
+          node.setRangeListOptions(0, combined.length, { type: block.ordered ? "ORDERED" : "UNORDERED" });
+        }
+      } catch (e) {
+        // If list options unsupported, leave as plain lines
+      }
+      rootFrame.appendChild(node);
     } else if (block.type === "table") {
       // Create grid-like layout using rows and cells
       const tableFrame = figma.createFrame();

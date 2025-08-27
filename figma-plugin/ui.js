@@ -52,15 +52,16 @@ function parseMarkdown(md) {
     const listMatch = /^\s*([*+-]|\d+\.)\s+(.+)$/.exec(line);
     if (listMatch) {
       const items = [];
+      let ordered = /\d+\./.test(listMatch[1]);
       while (i < lines.length) {
         const m = /^\s*([*+-]|\d+\.)\s+(.+)$/.exec(lines[i]);
         if (!m) break;
-        const marker = /\d+\./.test(m[1]) ? m[1] : "•";
+        if (!ordered && /\d+\./.test(m[1])) ordered = true;
         const { text, spans } = parseInline(m[2]);
-        items.push({ marker, text, spans });
+        items.push({ text, spans });
         i++;
       }
-      blocks.push({ type: "list", items });
+      blocks.push({ type: "list", ordered, items });
       continue;
     }
     // Paragraph (collect until blank)
