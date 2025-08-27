@@ -1,0 +1,12 @@
+{
+  "name": "Markdown to Figma",
+  "id": "md2fig.plugin",
+  "api": "1.0.0",
+  "main": "main.js",
+  "editorType": ["figma"],
+  "relaunchButtons": [
+    { "command": "open", "name": "Open MD2Fig" }
+  ]
+}
+
+
