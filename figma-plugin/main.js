@@ -12,12 +12,18 @@ figma.showUI(UI_HTML, { width: 480, height: 560 });
 // Utility: create text node with inline formatting spans
 async function createFormattedText(text, spans, baseStyle) {
   const node = figma.createText();
+  // Ensure the current font (default Inter Regular) is loaded before setting characters
+  await figma.loadFontAsync({ family: "Inter", style: "Regular" }).catch(() => {});
   node.characters = text || "";
-  // Load fonts required. Use default fonts; we'll attempt to load font per ranges later
-  await figma.loadFontAsync({ family: baseStyle.fontFamily || "Roboto", style: baseStyle.fontStyle || "Regular" }).catch(() => {});
+  // Apply base font if specified
+  if (baseStyle.fontFamily || baseStyle.fontStyle) {
+    const family = baseStyle.fontFamily || "Inter";
+    const style = baseStyle.fontStyle || "Regular";
+    await figma.loadFontAsync({ family, style }).catch(() => {});
+    try { node.fontName = { family, style }; } catch {}
+  }
   // Apply base styling
   if (baseStyle.fontSize) node.fontSize = baseStyle.fontSize;
-  if (baseStyle.lineHeight) node.lineHeight = { value: baseStyle.lineHeight, unit: "AUTO" };
   if (baseStyle.fills) node.fills = baseStyle.fills;
   if (baseStyle.hyperlink) node.hyperlink = baseStyle.hyperlink;
   // Inline spans: [{start,end,style:{bold,italic,code,linkUrl}}]
@@ -105,7 +111,6 @@ async function renderDoc(doc) {
       const baseStyle = { fontFamily: "Roboto", fontStyle: "Regular", fontSize: 12, fills: [TOKENS.panelText] };
       const node = await createFormattedText(block.text, block.spans, baseStyle);
       node.textAutoResize = "WIDTH_AND_HEIGHT";
-      node.maximumLineHeight = 18;
       rootFrame.appendChild(node);
     } else if (block.type === "blockquote") {
       const quote = figma.createFrame();
