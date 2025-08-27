@@ -18,7 +18,7 @@ $('render').addEventListener('click', function(){
   parent.postMessage({ pluginMessage: { type: 'render-md', markdown: md } }, '*');
 });
 $('sample').addEventListener('click', function(){
-  $('md').value = "# Sample Title\n\nA paragraph with **bold**, *italic*, \n[link](https://example.com) and `code`.\n\n---\n\n> Blockquote here.\n\n## List\n- First item\n- Second item\n\n## Table\n| Name | Value |\n| --- | --- |\n| A | 1 |\n| B | 2 |\n";
+  $('md').value = "# Sample Title\\n\\nA paragraph with **bold**, *italic*, \\n[link](https://example.com) and code.\\n\\n---\\n\\n> Blockquote here.\\n\\n## List\\n- First item\\n- Second item\\n\\n## Table\\n| Name | Value |\\n| --- | --- |\\n| A | 1 |\\n| B | 2 |\\n";
 });
 })();
 </script></body></html>`;
@@ -299,7 +299,7 @@ async function renderDoc(doc) {
       const node = await createFormattedText(combined, spans, baseStyle);
       try {
         if (typeof node.setRangeListOptions === "function") {
-          node.setRangeListOptions(0, combined.length, { type: doc.ordered ? "ORDERED" : "UNORDERED" });
+          node.setRangeListOptions(0, combined.length, { type: block.ordered ? "ORDERED" : "UNORDERED" });
         }
       } catch (e) {}
       rootFrame.appendChild(node);
