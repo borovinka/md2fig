@@ -1,18 +1,34 @@
 // Main plugin code: receives parsed markdown structure from UI and renders Figma nodes
 
-// Minimal inline UI HTML to avoid template literal conflicts
-const UI_HTML = `<!doctype html><html><head><meta charset="utf-8"/><title>Markdown to Figma</title><style>body{font-family:sans-serif;font-size:16px;background:#EBEBEB;color:#333;margin:0;padding:12px}textarea{width:100%;height:280px;font-family:monospace;box-sizing:border-box;padding:8px;border:1px solid #777;border-radius:6px;background:#fff}.actions{margin-top:8px;display:flex;gap:8px}button{font-size:14px;padding:8px 12px;border:1px solid #777;background:#fff;border-radius:6px;cursor:pointer}button.primary{background:#000;color:#fff;border-color:#000}</style></head><body><div id="app"><p>Paste Markdown below. Click Render to create a styled frame.</p><textarea id="md" placeholder="# Title\n\nSome text with **bold**, *italic*, [link](https://example.com)."></textarea><div class="actions"><button id="render" class="primary">Render</button><button id="sample">Load sample</button></div></div><script>
-(function(){
-var $ = function(id){ return document.getElementById(id); };
-$('render').addEventListener('click', function(){
-  var md = $('md').value || '';
-  parent.postMessage({ pluginMessage: { type: 'render-md', markdown: md } }, '*');
-});
-$('sample').addEventListener('click', function(){
-  $('md').value = "# Sample Title\\n\\nA paragraph with **bold**, *italic*.\\n\\n---\\n\\n> Blockquote here.\\n\\n## List\\n- First item\\n- Second item\\n\\n## Table\\n| Name | Value |\\n| --- | --- |\\n| A | 1 |\\n| B | 2 |\\n";
-});
-})();
-</script></body></html>`;
+// Build UI HTML using string concatenation to avoid template literal issues
+const UI_HTML = '<!doctype html>' +
+  '<html><head><meta charset="utf-8"/><title>Markdown to Figma</title>' +
+  '<style>' +
+  'body{font-family:sans-serif;font-size:16px;background:#EBEBEB;color:#333;margin:0;padding:12px}' +
+  'textarea{width:100%;height:280px;font-family:monospace;box-sizing:border-box;padding:8px;border:1px solid #777;border-radius:6px;background:#fff}' +
+  '.actions{margin-top:8px;display:flex;gap:8px}' +
+  'button{font-size:14px;padding:8px 12px;border:1px solid #777;background:#fff;border-radius:6px;cursor:pointer}' +
+  'button.primary{background:#000;color:#fff;border-color:#000}' +
+  '</style></head><body>' +
+  '<div id="app">' +
+  '<p>Paste Markdown below. Click Render to create a styled frame.</p>' +
+  '<textarea id="md" placeholder="# Title\n\nSome text with **bold**, *italic*, [link](https://example.com)."></textarea>' +
+  '<div class="actions">' +
+  '<button id="render" class="primary">Render</button>' +
+  '<button id="sample">Load sample</button>' +
+  '</div></div>' +
+  '<script>' +
+  '(function(){' +
+  'var $ = function(id){ return document.getElementById(id); };' +
+  '$("render").addEventListener("click", function(){' +
+  '  var md = $("md").value || "";' +
+  '  parent.postMessage({ pluginMessage: { type: "render-md", markdown: md } }, "*");' +
+  '});' +
+  '$("sample").addEventListener("click", function(){' +
+  '  $("md").value = "# Sample Title\\n\\nA paragraph with **bold**, *italic*.\\n\\n---\\n\\n> Blockquote here.\\n\\n## List\\n- First item\\n- Second item\\n\\n## Table\\n| Name | Value |\\n| --- | --- |\\n| A | 1 |\\n| B | 2 |\\n";' +
+  '});' +
+  '})();' +
+  '</script></body></html>';
 
 figma.showUI(UI_HTML, { width: 480, height: 560 });
 
