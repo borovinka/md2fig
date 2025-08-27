@@ -7,7 +7,8 @@ function parseInline(s){const spans=[];let text="";let i=0;while(i<s.length){if(
 document.getElementById('render').addEventListener('click',()=>{const md=document.getElementById('md').value||'';const doc=parseMarkdown(md);console.log('md2fig: sending doc to plugin',doc);parent.postMessage({pluginMessage:{type:'render-md',doc}},'*')});
 document.getElementById('sample').addEventListener('click',()=>{document.getElementById('md').value="# Sample Title\n\nA paragraph with **bold**, *italic*, \n[link](https://example.com) and `code`.\n\n---\n\n> Blockquote here.\n\n## List\n- First item\n- Second item\n\n## Table\n| Name | Value |\n| --- | --- |\n| A | 1 |\n| B | 2 |\n"});}.toString()})()</script></body></html>`;
 
-figma.showUI(UI_HTML, { width: 480, height: 560 });
+// UI is provided via manifest ui.html
+figma.showUI({ width: 480, height: 560 });
 
 // Utility: create text node with inline formatting spans
 async function createFormattedText(text, spans, baseStyle) {

@@ -1,0 +1,28 @@
+/* UI styling for plugin chrome */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Ubuntu, 'Droid Sans', sans-serif;
+  font-size: 16px;
+  background: var(--panel-background);
+  color: var(--panel-text);
+  margin: 0;
+}
+
+#app { padding: 12px; }
+
+textarea {
+  width: 100%;
+  height: 280px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.actions { margin-top: 8px; display: flex; gap: 8px; }
+
+button { font-size: 14px; padding: 8px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; cursor: pointer; }
+button.primary { background: #000; color: #fff; border-color: #000; }
+
+
