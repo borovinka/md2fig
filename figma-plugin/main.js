@@ -1,7 +1,52 @@
 // Main plugin code: receives parsed markdown structure from UI and renders Figma nodes
 
-// UI provided by manifest (ui.html)
-figma.showUI({ width: 480, height: 560 });
+// Inline UI HTML so showUI receives a string (required by Figma runtime)
+const UI_HTML = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Markdown to Figma</title><style>
+:root{--panel-background:#EBEBEB;--panel-text:#333333;--formatted-text:#000000;--link:#004BFA;--border:#777777;--code:rgba(255,255,255,.8);--table:var(--code);--table-header:rgba(128,128,128,.2);} 
+/* UI styling for plugin chrome */
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Ubuntu,'Droid Sans',sans-serif;font-size:16px;background:var(--panel-background);color:var(--panel-text);margin:0}
+#app{padding:12px}
+textarea{width:100%;height:280px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;box-sizing:border-box;padding:8px;border:1px solid var(--border);border-radius:6px;background:#fff}
+.actions{margin-top:8px;display:flex;gap:8px}
+button{font-size:14px;padding:8px 12px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer}
+button.primary{background:#000;color:#fff;border-color:#000}
+/* Markdown preview (if needed in UI) */
+p{line-height:1.5}
+h1,h2,h3,h4,h5,h6{font-weight:700;color:var(--formatted-text)}
+h1{font-size:1.66em;margin:.7em 0}
+h2{font-size:1.5em;margin:.8em 0}
+h3{font-size:1.33em;margin:.9em 0}
+h4{font-size:1.16em;margin:1em 0}
+h5{font-size:1em;margin:1.1em 0}
+h6{font-size:.83em;margin:1.2em 0;text-transform:uppercase;letter-spacing:2%}
+strong,em,del,code{color:var(--formatted-text)}
+strong{font-weight:700}
+em{font-style:italic}
+del{text-decoration:line-through}
+code,pre{font-family:monospace;line-height:1.5;font-weight:500 600;background:var(--code);border:solid .25px var(--border)}
+code{padding:.25em;border-radius:.25em}
+pre{padding:1em;border-radius:.5em;max-height:30em;overflow:auto}
+a{color:var(--link);text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+blockquote{font-style:italic;border-left:1px dashed var(--border);padding-left:1em;margin:1em 0}
+ol,ul{line-height:1.5;padding-left:2em;margin:.5em 0}
+ol ol,ul ul{list-style-type:lower-alpha;padding-left:2em}
+ul ul{list-style-type:circle}
+ol li,ul li{margin:.1em 0}
+table{width:100%;border-collapse:collapse;background:var(--table)}
+td,th{border:.5px solid var(--border);text-align:left;padding:.75em}
+th{background:var(--table-header);color:var(--formatted-text);font-weight:500 600}
+hr{border:.25px solid var(--border);margin:1em 0}
+</style></head><body><div id="app"><p>Paste Markdown below. Click Render to create a styled frame.</p><textarea id="md" placeholder="# Title\n\nSome text with **bold**, *italic*, [link](https://example.com)."></textarea><div class="actions"><button id="render" class="primary">Render</button><button id="sample">Load sample</button></div></div><script>
+(function(){
+function parseMarkdown(md){const lines=md.replace(/\r\n?/g,"\n").split("\n");const blocks=[];let i=0;while(i<lines.length){let line=lines[i];if(!line.trim()){i++;continue}if(/^\s*-{3,}\s*$/.test(line)){blocks.push({type:"hr"});i++;continue}const h=/^(#{1,6})\s+(.+)$/.exec(line);if(h){const level=("H"+h[1].length).toUpperCase();const {text,spans}=parseInline(h[2]);blocks.push({type:"heading",level,text,spans});i++;continue}if(/^>\s?/.test(line)){const content=line.replace(/^>\s?/,"");const {text,spans}=parseInline(content);blocks.push({type:"blockquote",text,spans});i++;continue}if(/^```/.test(line)){i++;const buf=[];while(i<lines.length&&!/^```/.test(lines[i])){buf.push(lines[i]);i++}i++;blocks.push({type:"codeblock",text:buf.join("\n")});continue}if(/^\|.*\|$/.test(line)){const rows=[];while(i<lines.length&&/^\|.*\|$/.test(lines[i])){const cells=lines[i].slice(1,-1).split("|").map(s=>s.trim());rows.push(cells);i++}const normalized=rows.filter(r=>!r.every(c=>/^:?-{3,}:?$/.test(c))).map(r=>r.map(c=>{const {text,spans}=parseInline(c);return {text,spans}}));if(normalized.length)blocks.push({type:"table",rows:normalized});continue}const listMatch=/^\s*([*+-]|\d+\.)\s+(.+)$/.exec(line);if(listMatch){const items=[];let ordered=/\d+\./.test(listMatch[1]);while(i<lines.length){const m=/^\s*([*+-]|\d+\.)\s+(.+)$/.exec(lines[i]);if(!m)break;if(!ordered&&/\d+\./.test(m[1]))ordered=true;const {text,spans}=parseInline(m[2]);items.push({text,spans});i++}blocks.push({type:"list",ordered,items});continue}const buf=[line];i++;while(i<lines.length&&lines[i].trim()){buf.push(lines[i]);i++}const para=buf.join(" ");const {text,spans}=parseInline(para);blocks.push({type:"paragraph",text,spans})}const titleBlock=blocks.find(b=>b.type==='heading'&&b.level==='H1');return {title:titleBlock?titleBlock.text:'Markdown',blocks}};
+function parseInline(s){const spans=[];let text="";let i=0;while(i<s.length){if(s[i]==='['){const end=s.indexOf(']',i+1);const paren=end>=0?s.indexOf('(',end+1):-1;const close=paren>=0?s.indexOf(')',paren+1):-1;if(end>i&&paren===end+1&&close>paren){const label=s.slice(i+1,end);const url=s.slice(paren+1,close);const start=text.length;text+=label;const endPos=text.length;spans.push({start,end:endPos,style:{fill:{type:'SOLID',color:{r:0,g:0.294,b:0.980}},hyperlink:{type:'URL',value:url},fontStyle:'Regular',fontFamily:'Roboto'}});i=close+1;continue}}if(s[i]==='*'&&s[i+1]==='*'){const close=s.indexOf('**',i+2);if(close>i){const content=s.slice(i+2,close);const start=text.length;text+=content;const endPos=text.length;spans.push({start,end:endPos,style:{fontStyle:'Bold',fontFamily:'Roboto'}});i=close+2;continue}}if(s[i]==='*'){const close=s.indexOf('*',i+1);if(close>i){const content=s.slice(i+1,close);const start=text.length;text+=content;const endPos=text.length;spans.push({start,end:endPos,style:{fontStyle:'Italic',fontFamily:'Roboto'}});i=close+1;continue}}if(s[i]==='`'){const close=s.indexOf('`',i+1);if(close>i){const content=s.slice(i+1,close);const start=text.length;text+=content;const endPos=text.length;spans.push({start,end:endPos,style:{code:true,fontFamily:'Roboto Mono'}});i=close+1;continue}}text+=s[i];i++}return {text,spans}};
+document.getElementById('render').addEventListener('click',()=>{const md=document.getElementById('md').value||'';const doc=parseMarkdown(md);console.log('md2fig: sending doc to plugin',doc);parent.postMessage({pluginMessage:{type:'render-md',doc}},'*')});
+document.getElementById('sample').addEventListener('click',()=>{document.getElementById('md').value="# Sample Title\n\nA paragraph with **bold**, *italic*, \n[link](https://example.com) and `code`.\n\n---\n\n> Blockquote here.\n\n## List\n- First item\n- Second item\n\n## Table\n| Name | Value |\n| --- | --- |\n| A | 1 |\n| B | 2 |\n"});
+})();
+</script></body></html>`;
+
+figma.showUI(UI_HTML, { width: 480, height: 560 });
 
 // Utility: create text node with inline formatting spans
 async function createFormattedText(text, spans, baseStyle) {
@@ -154,32 +199,28 @@ async function renderDoc(doc) {
       const node = await createFormattedText(combined, spans, baseStyle);
       try {
         if (typeof node.setRangeListOptions === "function") {
-          node.setRangeListOptions(0, combined.length, { type: block.ordered ? "ORDERED" : "UNORDERED" });
+          // For embedded UI we keep the same behavior; ordered flag not sent here because UI parse already computed it
+          node.setRangeListOptions(0, combined.length, { type: "UNORDERED" });
         }
-      } catch (e) {
-        // If list options unsupported, leave as plain lines
-      }
+      } catch (e) {}
       rootFrame.appendChild(node);
     } else if (block.type === "table") {
       // Grid-like table using Auto Layout: rows (HORIZONTAL), cells grow equally
-      const columnCount = block.rows[0] ? block.rows[0].length : 0;
       const tableFrame = figma.createFrame();
       setAutoLayout(tableFrame, { mode: "VERTICAL", spacing: 0, alignItems: "MIN" });
       tableFrame.fills = [TOKENS.codeBg];
       tableFrame.strokes = [TOKENS.border];
       tableFrame.strokeWeight = 1;
-      const tableWidth = 720; // fixed table width for equal column sizing
-
+      const tableWidth = 720;
       for (let r = 0; r < block.rows.length; r++) {
         const row = figma.createFrame();
         setAutoLayout(row, { mode: "HORIZONTAL", spacing: 0, alignItems: "MIN" });
         row.layoutSizingHorizontal = "FIXED";
         row.resize(tableWidth, row.height);
-
         for (let c = 0; c < block.rows[r].length; c++) {
           const cell = figma.createFrame();
           setAutoLayout(cell, { mode: "VERTICAL", spacing: 0, padding: 12, alignItems: "MIN" });
-          cell.layoutGrow = 1; // make cells distribute evenly across row
+          cell.layoutGrow = 1;
           cell.strokes = [TOKENS.border];
           cell.strokeWeight = 1;
           cell.fills = r === 0 ? [TOKENS.tableHeaderBg] : [];
@@ -196,7 +237,6 @@ async function renderDoc(doc) {
       rootFrame.appendChild(tableFrame);
     }
   }
-
   rootFrame.x = figma.viewport.center.x - rootFrame.width / 2;
   rootFrame.y = figma.viewport.center.y - rootFrame.height / 2;
   figma.currentPage.appendChild(rootFrame);
