@@ -166,26 +166,38 @@ async function renderDoc(doc) {
       }
       rootFrame.appendChild(node);
     } else if (block.type === "table") {
-      // Create grid-like layout using rows and cells
+      // Grid-like table using Auto Layout: rows (HORIZONTAL), cells grow equally
+      const columnCount = block.rows[0] ? block.rows[0].length : 0;
       const tableFrame = figma.createFrame();
       setAutoLayout(tableFrame, { mode: "VERTICAL", spacing: 0, alignItems: "MIN" });
-      tableFrame.strokes = [TOKENS.border];
       tableFrame.fills = [TOKENS.codeBg];
+      tableFrame.strokes = [TOKENS.border];
+      tableFrame.strokeWeight = 1;
+      const tableWidth = 720; // fixed table width for equal column sizing
+
       for (let r = 0; r < block.rows.length; r++) {
         const row = figma.createFrame();
         setAutoLayout(row, { mode: "HORIZONTAL", spacing: 0, alignItems: "MIN" });
+        row.layoutSizingHorizontal = "FIXED";
+        row.resize(tableWidth, row.height);
+
         for (let c = 0; c < block.rows[r].length; c++) {
           const cell = figma.createFrame();
           setAutoLayout(cell, { mode: "VERTICAL", spacing: 0, padding: 12, alignItems: "MIN" });
+          cell.layoutGrow = 1; // make cells distribute evenly across row
           cell.strokes = [TOKENS.border];
+          cell.strokeWeight = 1;
           cell.fills = r === 0 ? [TOKENS.tableHeaderBg] : [];
           const baseStyle = { fontFamily: "Roboto", fontStyle: r === 0 ? "Medium" : "Regular", fontSize: 12, fills: [TOKENS.formattedText] };
           const textNode = await createFormattedText(block.rows[r][c].text, block.rows[r][c].spans, baseStyle);
+          textNode.textAutoResize = "WIDTH_AND_HEIGHT";
           cell.appendChild(textNode);
           row.appendChild(cell);
         }
         tableFrame.appendChild(row);
       }
+      tableFrame.layoutSizingHorizontal = "FIXED";
+      tableFrame.resize(tableWidth, tableFrame.height);
       rootFrame.appendChild(tableFrame);
     }
   }
