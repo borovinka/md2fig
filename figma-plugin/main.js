@@ -20,7 +20,7 @@ async function createFormattedText(text, spans, baseStyle) {
     const family = baseStyle.fontFamily || "Inter";
     const style = baseStyle.fontStyle || "Regular";
     await figma.loadFontAsync({ family, style }).catch(() => {});
-    try { node.fontName = { family, style }; } catch {}
+    try { node.fontName = { family, style }; } catch (e) {}
   }
   // Apply base styling
   if (baseStyle.fontSize) node.fontSize = baseStyle.fontSize;
