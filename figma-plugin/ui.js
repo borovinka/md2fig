@@ -94,7 +94,7 @@ function parseInline(s) {
         const start = text.length;
         text += label;
         const endPos = text.length;
-        spans.push({ start, end: endPos, style: { fill: { type:'SOLID', color:{ r:0, g:0.294, b:0.980 } }, hyperlink: { type: 'URL', value: url }, fontStyle: 'Regular', fontFamily: 'Roboto', fontSize: 12 } });
+        spans.push({ start, end: endPos, style: { fill: { type:'SOLID', color:{ r:0, g:0.294, b:0.980 } }, hyperlink: { type: 'URL', value: url }, fontStyle: 'Regular', fontFamily: 'Roboto' } });
         i = close + 1;
         continue;
       }
