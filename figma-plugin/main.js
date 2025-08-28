@@ -135,7 +135,10 @@ function parseMarkdown(md) {
         return { text, spans };
       }));
       if (normalized.length >= 2) { // Need at least header + 1 data row
+        console.log('md2fig: parsed table with', normalized.length, 'rows');
         blocks.push({ type: "table", rows: normalized });
+      } else {
+        console.log('md2fig: table filtered out, normalized length:', normalized.length);
       }
       continue;
     }
@@ -321,6 +324,7 @@ async function renderDoc(doc) {
       rootFrame.appendChild(node);
       node.layoutSizingHorizontal = "FILL";
     } else if (block.type === "table") {
+      console.log('md2fig: rendering table with', block.rows.length, 'rows');
       const tableFrame = figma.createFrame();
       setAutoLayout(tableFrame, { mode: "VERTICAL", spacing: 0, alignItems: "MIN" });
       tableFrame.fills = [TOKENS.codeBg];
