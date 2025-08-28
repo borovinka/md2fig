@@ -246,9 +246,10 @@ function setAutoLayout(container, opts) {
 
 async function renderDoc(doc) {
   const rootFrame = figma.createFrame();
-  rootFrame.name = doc.title || "Markdown";
+  rootFrame.name = "md2fig";
   setAutoLayout(rootFrame, { mode: "VERTICAL", spacing: 8, padding: 24, alignItems: "MIN" });
   rootFrame.fills = [colorFromHex("#EBEBEB")];
+  rootFrame.resize(960, rootFrame.height);
 
   for (const block of doc.blocks) {
     if (block.type === "heading") {
@@ -276,7 +277,7 @@ async function renderDoc(doc) {
       rootFrame.appendChild(quote);
     } else if (block.type === "hr") {
       const line = figma.createRectangle();
-      line.resize(600, 1);
+      line.resize(900, 1);
       line.fills = [];
       line.strokes = [TOKENS.border];
       rootFrame.appendChild(line);
@@ -316,7 +317,7 @@ async function renderDoc(doc) {
       tableFrame.fills = [TOKENS.codeBg];
       tableFrame.strokes = [TOKENS.border];
       tableFrame.strokeWeight = 1;
-      const tableWidth = 720;
+      const tableWidth = 900;
       for (let r = 0; r < block.rows.length; r++) {
         const row = figma.createFrame();
         setAutoLayout(row, { mode: "HORIZONTAL", spacing: 0, alignItems: "MIN" });
