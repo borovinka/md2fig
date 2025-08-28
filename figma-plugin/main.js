@@ -260,14 +260,14 @@ async function renderDoc(doc) {
     if (block.type === "heading") {
       const baseStyle = { fontFamily: "Roboto", fontStyle: "Bold", fontSize: HEADING_SIZES[block.level] || 12, fills: [TOKENS.formattedText] };
       const node = await createFormattedText(block.text, block.spans, baseStyle);
-      node.layoutSizingHorizontal = "FILL";
       rootFrame.appendChild(node);
+      node.layoutSizingHorizontal = "FILL";
     } else if (block.type === "paragraph") {
       const baseStyle = { fontFamily: "Roboto", fontStyle: "Regular", fontSize: 16, fills: [TOKENS.panelText] };
       const node = await createFormattedText(block.text, block.spans, baseStyle);
       node.textAutoResize = "WIDTH_AND_HEIGHT";
-      node.layoutSizingHorizontal = "FILL";
       rootFrame.appendChild(node);
+      node.layoutSizingHorizontal = "FILL";
     } else if (block.type === "blockquote") {
       const quote = figma.createFrame();
       setAutoLayout(quote, { mode: "VERTICAL", spacing: 4, padding: 8, alignItems: "MIN", fullWidth: true });
@@ -283,11 +283,11 @@ async function renderDoc(doc) {
       rootFrame.appendChild(quote);
     } else if (block.type === "hr") {
       const line = figma.createRectangle();
-      line.layoutSizingHorizontal = "FILL";
       line.resize(1, 1);
       line.fills = [];
       line.strokes = [TOKENS.border];
       rootFrame.appendChild(line);
+      line.layoutSizingHorizontal = "FILL";
     } else if (block.type === "codeblock") {
       const frame = figma.createFrame();
       setAutoLayout(frame, { mode: "VERTICAL", spacing: 4, padding: 16, alignItems: "MIN", fullWidth: true });
@@ -317,8 +317,8 @@ async function renderDoc(doc) {
           node.setRangeListOptions(0, combined.length, { type: block.ordered ? "ORDERED" : "UNORDERED" });
         }
       } catch (e) {}
-      node.layoutSizingHorizontal = "FILL";
       rootFrame.appendChild(node);
+      node.layoutSizingHorizontal = "FILL";
     } else if (block.type === "table") {
       const tableFrame = figma.createFrame();
       setAutoLayout(tableFrame, { mode: "VERTICAL", spacing: 0, alignItems: "MIN", fullWidth: true });
@@ -329,7 +329,6 @@ async function renderDoc(doc) {
       for (let r = 0; r < block.rows.length; r++) {
         const row = figma.createFrame();
         setAutoLayout(row, { mode: "HORIZONTAL", spacing: 0, alignItems: "MIN" });
-        row.layoutSizingHorizontal = "FILL";
         for (let c = 0; c < block.rows[r].length; c++) {
           const cell = figma.createFrame();
           setAutoLayout(cell, { mode: "VERTICAL", spacing: 0, padding: 12, alignItems: "MIN" });
@@ -344,6 +343,7 @@ async function renderDoc(doc) {
           row.appendChild(cell);
         }
         tableFrame.appendChild(row);
+        row.layoutSizingHorizontal = "FILL";
       }
       tableFrame.layoutSizingHorizontal = "FILL";
       rootFrame.appendChild(tableFrame);
