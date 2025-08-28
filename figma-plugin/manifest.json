@@ -1,6 +1,6 @@
 {
   "name": "Markdown to Figma",
-  "id": "md2fig.plugin",
+  "id": "1542855637177527302",
   "api": "1.0.0",
   "main": "main.js",
   "editorType": ["figma"],
