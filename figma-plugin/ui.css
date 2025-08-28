@@ -2,8 +2,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Ubuntu, 'Droid Sans', sans-serif;
   font-size: 16px;
-  background: var(--panel-background);
-  color: var(--panel-text);
+  background: #FFF;;
+  color: #000;
   margin: 0;
 }
 
@@ -11,7 +11,7 @@ body {
 
 textarea {
   width: 100%;
-  height: 280px;
+  height: 100%;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
   box-sizing: border-box;
   padding: 8px;
