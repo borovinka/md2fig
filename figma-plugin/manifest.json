@@ -4,6 +4,9 @@
   "api": "1.0.0",
   "main": "main.js",
   "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  },
   "relaunchButtons": [
     { "command": "open", "name": "Open MD2Fig" }
   ]
