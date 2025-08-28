@@ -7,6 +7,7 @@
   "networkAccess": {
     "allowedDomains": ["none"]
   },
+  "documentAccess": "dynamic-page",
   "relaunchButtons": [
     { "command": "open", "name": "Open MD2Fig" }
   ]
