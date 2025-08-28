@@ -123,22 +123,40 @@ function parseMarkdown(md) {
       continue;
     }
     if (/^\|.*\|$/.test(line)) {
-      const rows = [];
+      const rawRows = [];
       while (i < lines.length && /^\|.*\|$/.test(lines[i])) {
         const cells = lines[i].slice(1, -1).split("|").map(s => s.trim());
-        rows.push(cells);
+        rawRows.push(cells);
         i++;
       }
-      // Filter out separator rows (those with only dashes and colons)
-      const normalized = rows.filter(r => !r.every(c => /^:?-{2,}:?$/.test(c)) ).map(r => r.map(c => {
-        const { text, spans } = parseInline(c);
-        return { text, spans };
-      }));
-      if (normalized.length >= 2) { // Need at least header + 1 data row
-        console.log('md2fig: parsed table with', normalized.length, 'rows');
-        blocks.push({ type: "table", rows: normalized });
+      // Need at least header + separator
+      if (rawRows.length >= 2) {
+        const header = rawRows[0];
+        const sep = rawRows[1];
+        // Determine alignment from separator row
+        const align = sep.map(cell => {
+          const left = /^:\-+/.test(cell);
+          const right = /\-+:$/.test(cell);
+          if (left && right) return "CENTER";
+          if (right) return "RIGHT";
+          return "LEFT";
+        });
+        // Remaining data rows
+        const dataRows = rawRows.slice(2);
+        // Normalize: convert all rows (header + data) to [{text, spans}] cells
+        const normalized = [header, ...dataRows].map(r => r.map(c => {
+          const { text, spans } = parseInline(c);
+          return { text, spans };
+        }));
+        // Only push if we still have at least header row
+        if (normalized.length >= 1) {
+          console.log('md2fig: parsed table with', normalized.length, 'rows, columns', header.length, 'align', align);
+          blocks.push({ type: "table", rows: normalized, align });
+        } else {
+          console.log('md2fig: table filtered out after normalization');
+        }
       } else {
-        console.log('md2fig: table filtered out, normalized length:', normalized.length);
+        console.log('md2fig: table candidate ignored (missing separator row)');
       }
       continue;
     }
@@ -342,8 +360,11 @@ async function renderDoc(doc) {
           cell.strokeWeight = 1;
           cell.fills = r === 0 ? [TOKENS.tableHeaderBg] : [];
           const baseStyle = { fontFamily: "Roboto", fontStyle: r === 0 ? "Medium" : "Regular", fontSize: 16, fills: [TOKENS.formattedText] };
-          const textNode = await createFormattedText(block.rows[r][c].text, block.rows[r][c].spans, baseStyle);
+          const textNode = await createFormattedText(block.rows[r][c]?.text || "", block.rows[r][c]?.spans || [], baseStyle);
           textNode.textAutoResize = "WIDTH_AND_HEIGHT";
+          // Apply column alignment if provided
+          const colAlign = Array.isArray(block.align) ? (block.align[c] || "LEFT") : "LEFT";
+          try { textNode.textAlignHorizontal = colAlign; } catch (e) {}
           cell.appendChild(textNode);
           row.appendChild(cell);
         }
