@@ -341,6 +341,7 @@ async function renderDoc(doc) {
           row.appendChild(cell);
         }
         tableFrame.appendChild(row);
+        row.layoutSizingHorizontal = "FILL";
       }
       rootFrame.appendChild(tableFrame);
       tableFrame.layoutSizingHorizontal = "FILL";
