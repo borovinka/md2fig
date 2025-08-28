@@ -103,19 +103,11 @@ function parseMarkdown(md) {
     let line = lines[i];
     if (!line.trim()) { i++; continue; }
     if (/^\s*-{3,}\s*$/.test(line)) { blocks.push({ type: "hr" }); i++; continue; }
-    // Check for standard markdown headings (# ## ### etc.)
     const h = /^(#{1,6})\s+(.+)$/.exec(line);
     if (h) {
       const level = ("H" + h[1].length).toUpperCase();
       const { text, spans } = parseInline(h[2]);
       blocks.push({ type: "heading", level, text, spans }); i++; continue;
-    }
-    
-    // Check for bold text that should be treated as headings (e.g., **Title**)
-    const boldHeading = /^\*\*(.+?)\*\*\s*$/.exec(line);
-    if (boldHeading && line.trim().length > 0 && line.trim().length < 100) {
-      const { text, spans } = parseInline(boldHeading[1]);
-      blocks.push({ type: "heading", level: "H2", text, spans }); i++; continue;
     }
     if (/^>\s?/.test(line)) {
       const content = line.replace(/^>\s?/, "");
