@@ -341,10 +341,9 @@ async function renderDoc(doc) {
           row.appendChild(cell);
         }
         tableFrame.appendChild(row);
-        row.layoutSizingHorizontal = "FILL";
       }
-      tableFrame.layoutSizingHorizontal = "FILL";
       rootFrame.appendChild(tableFrame);
+      tableFrame.layoutSizingHorizontal = "FILL";
     }
   }
   rootFrame.x = figma.viewport.center.x - rootFrame.width / 2;
