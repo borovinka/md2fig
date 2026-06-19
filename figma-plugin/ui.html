@@ -201,6 +201,306 @@
         <button id="sample" class="btn btn--ghost btn--end" type="button">Load sample</button>
       </div>
     </main>
+    <script type="text/markdown" id="sample-md"># Markdown Formatting Test
+
+This file exercises the GitHub-flavored Markdown formatting options documented in:
+- [Basic writing and formatting syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [Organizing information with tables](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables)
+
+---
+
+## Headings
+
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+
+---
+
+## Text Styling
+
+**This is bold text**
+
+__This is also bold text__
+
+*This is italic text*
+
+_This is also italic text_
+
+~~This is strikethrough text~~
+
+**Bold and _nested italic_ text**
+
+***All bold and italic text***
+
+This is a <sub>subscript</sub> text
+
+This is a <sup>superscript</sup> text
+
+---
+
+## Quoting
+
+### Quoting Text
+
+> Text that is a quote
+>
+> Multiple paragraphs in a quote
+>
+> > Nested quote
+
+### Quoting Code
+
+Use `git status` to list all new or modified files that haven't yet been committed.
+
+Some basic Git commands are:
+```
+git status
+git add
+git commit
+```
+
+---
+
+## Links
+
+### Inline Links
+
+This site was built using [GitHub Pages](https://pages.github.com/).
+
+### Relative Links
+
+[Contribution guidelines for this project](docs/CONTRIBUTING.md)
+
+### Section Links
+
+[Jump to headings section](#headings)
+
+### Autolinked URLs
+
+Visit https://github.com — it will be automatically converted to a link.
+
+---
+
+## Images
+
+### Inline Image
+
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
+
+### Image with Theme Support
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/25423296/163456776-7f95b81a-f1ed-45f7-b7ab-8fa810d529fa.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." width="200">
+</picture>
+
+---
+
+## Lists
+
+### Unordered Lists
+
+- George Washington
+- John Adams
+- Thomas Jefferson
+
+* Item with asterisk
+* Another item
+
++ Item with plus
++ Another item
+
+### Ordered Lists
+
+1. James Madison
+2. James Monroe
+3. John Quincy Adams
+
+### Nested Lists
+
+1. First list item
+   - First nested list item
+     - Second nested list item
+   - Another nested item
+2. Second list item
+
+### Task Lists
+
+- [x] #739
+- [ ] https://github.com/octo-org/octo-repo/issues/740
+- [ ] Add delight to the experience when all tasks are complete :tada:
+
+---
+
+## Paragraphs
+
+You can create a new paragraph by leaving a blank line between lines of text.
+
+This is the second paragraph. Without a blank line,
+this would continue the same paragraph.
+
+---
+
+## Footnotes
+
+Here is a simple footnote[^1].
+
+A footnote can also have multiple lines[^2].
+
+[^1]: My reference.
+[^2]: To add line breaks within a footnote, prefix new lines with 2 spaces.
+  This is a second line.
+
+---
+
+## Alerts
+
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+
+---
+
+## Hiding Content with Comments
+
+<!-- This content will not appear in the rendered Markdown -->
+
+The comment above is hidden.
+
+---
+
+## Ignoring Markdown Formatting
+
+Let's rename \*our-new-project\* to \*our-old-project\*.
+
+Use a backslash to escape: \` \* \_ \{ \} \[ \] \( \) \# \+ \- \. \!
+
+---
+
+## Emoji
+
+@octocat :+1: This PR looks great - it's ready to merge! :shipit:
+
+Gone camping! :tent: Be back soon.
+
+That is so funny! :joy:
+
+---
+
+## Horizontal Rules
+
+Three or more hyphens:
+
+---
+
+Three or more asterisks:
+
+***
+
+Three or more underscores:
+
+___
+
+---
+
+## Tables
+
+### Basic Table
+
+| First Header | Second Header |
+| ------------ | ------------- |
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
+
+### Column Alignment
+
+| Left-aligned | Center-aligned | Right-aligned |
+| :----------- | :------------: | ------------: |
+| git status   |   git status   |    git status |
+| git diff     |    git diff    |      git diff |
+
+### Formatting Within Tables
+
+| Command   | Description                                      |
+| --------- | ------------------------------------------------ |
+| `git status` | List all *new or modified* files              |
+| `git diff`   | Show file differences that **haven't been** staged |
+
+### Table with Links and Inline Code
+
+| Name     | Character |
+| -------- | --------- |
+| Backtick | `         |
+| Pipe     | \|        |
+
+### Table with Escaped Pipes
+
+| Name     | Character |
+| -------- | --------- |
+| Backtick | `` ` ``   |
+| Pipe     | \|        |
+
+---
+
+## Code Blocks
+
+### Fenced Code Blocks (Triple Backticks)
+
+```
+function test() {
+  console.log("no language specified");
+}
+```
+
+### Inline Code
+
+Use `git commit -m "message"` to commit your changes.
+
+---
+
+## Putting It All Together
+
+Here's a **complex example** combining _multiple_ formatting options:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/example/repo.git
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Check the status:
+
+   | Step          | Command        | Expected Output       |
+   | ------------- | -------------- | --------------------- |
+   | Check branch  | `git branch`   | `* main`              |
+   | Run tests     | `npm test`     | All tests passing     |
+   | Build project | `npm run build`| No errors             |
+
+4. Review the results[^3].
+
+> [!TIP]
+> Run `npm run lint` before committing to catch formatting issues early.
+
+[^3]: See the [contributing guide](CONTRIBUTING.md) for full details.
+</script>
     <script>
       // UI side: forward raw Markdown to the main thread, which does the
       // parsing and renders Figma nodes.
@@ -213,27 +513,10 @@
         });
 
         $("sample").addEventListener("click", function () {
-          $("md").value = [
-            "# Sample Title",
-            "",
-            "A paragraph with **bold**, *italic*,",
-            "[link](https://example.com) and `code`.",
-            "",
-            "---",
-            "",
-            "> Blockquote here.",
-            "",
-            "## List",
-            "- First item",
-            "- Second item",
-            "",
-            "## Table",
-            "| Name | Value |",
-            "| --- | --- |",
-            "| A | 1 |",
-            "| B | 2 |",
-            "",
-          ].join("\n");
+          // Sample markdown lives in a hidden <script type="text/markdown">
+          // block above; read its textContent so we don't have to escape
+          // backticks, backslashes, or quotes in JavaScript.
+          $("md").value = $("sample-md").textContent.replace(/^\n/, "");
         });
       })();
     </script>
