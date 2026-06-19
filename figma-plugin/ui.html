@@ -152,6 +152,8 @@
       .btn--ghost:hover  { background: rgba(0, 112, 242, 0.08); }
       .btn--ghost:active { background: rgba(0, 112, 242, 0.16); }
 
+      .btn--end { margin-left: auto; }
+
       .btn__icon {
         display: inline-flex;
         width: 16px;
@@ -180,7 +182,6 @@
       </div>
 
       <div class="actions">
-        <button id="sample" class="btn btn--ghost" type="button">Load sample</button>
         <button id="render" class="btn btn--primary" type="button">
           <span class="btn__icon" aria-hidden="true">
             <svg viewBox="0 0 18.2861 18.2857" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -194,6 +195,7 @@
           </span>
           <span class="btn__label">Render</span>
         </button>
+        <button id="sample" class="btn btn--ghost btn--end" type="button">Load sample</button>
       </div>
     </main>
     <script>
