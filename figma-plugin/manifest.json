@@ -3,6 +3,7 @@
   "id": "1542855637177527302",
   "api": "1.0.0",
   "main": "main.js",
+  "ui": "ui.html",
   "editorType": ["figma"],
   "networkAccess": {
     "allowedDomains": ["none"]

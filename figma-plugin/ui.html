@@ -4,20 +4,38 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Markdown to Figma</title>
-    <link rel="stylesheet" href="markdown.css" />
     <link rel="stylesheet" href="ui.css" />
   </head>
   <body>
-    <div id="app">
-      <p>Paste Markdown below. Click Render to create a styled frame.</p>
-      <textarea id="md" placeholder="# Title\n\nSome text with **bold**, *italic*, [link](https://example.com)."></textarea>
-      <div class="actions">
-        <button id="render" class="primary">Render</button>
-        <button id="sample">Load sample</button>
+    <main class="plugin">
+      <h1 class="plugin__title">Markdown to Figma</h1>
+
+      <div class="field">
+        <label class="field__label" for="md">Paste Markdown below:</label>
+        <textarea
+          id="md"
+          class="field__textarea"
+          placeholder="Paste Markdown formatted text to convert into Figma auto layout"
+        ></textarea>
       </div>
-    </div>
+
+      <div class="actions">
+        <button id="sample" class="btn btn--ghost" type="button">Load sample</button>
+        <button id="render" class="btn btn--primary" type="button">
+          <span class="btn__icon" aria-hidden="true">
+            <svg viewBox="0 0 18.2861 18.2857" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                fill="currentColor"
+                d="M6.30286 9.97107C5.93786 11.34 4.68929 12.3482 3.20536 12.3482C1.435 12.3482 0 10.9132 0 9.14286C0 7.3725 1.435 5.9375 3.20536 5.9375C4.70964 5.9375 5.97179 6.97357 6.31714 8.37107H8.63143L8.04786 7.78393C7.73643 7.47036 7.73822 6.96393 8.05143 6.6525C8.365 6.34107 8.87143 6.34286 9.18286 6.65607L11.0568 8.5425C11.0789 8.56072 11.1007 8.58 11.1214 8.60072C11.2879 8.76822 11.365 8.99071 11.3525 9.20929C11.3432 9.40179 11.2646 9.59179 11.1171 9.73822C11.0975 9.75786 11.0768 9.77643 11.0554 9.79357L9.16643 11.6704C8.85286 11.9818 8.34643 11.98 8.035 11.6668C7.72357 11.3532 7.72536 10.8468 8.03857 10.5354L8.60643 9.97107H6.30143H6.30286ZM3.20536 10.5196C3.96571 10.5196 4.58214 9.90322 4.58214 9.14286C4.58214 8.3825 3.96571 7.76607 3.20536 7.76607C2.445 7.76607 1.82857 8.3825 1.82857 9.14286C1.82857 9.90322 2.445 10.5196 3.20536 10.5196ZM11.8286 7.77679C11.8286 6.76679 12.6546 5.94821 13.6736 5.94821H16.4411C17.46 5.94821 18.2861 6.76679 18.2861 7.77679V10.5196C18.2861 11.5296 17.46 12.3482 16.4411 12.3482H13.6736C12.6546 12.3482 11.8286 11.5296 11.8286 10.5196V7.77679ZM16.4407 7.77679H13.6732V10.5196H16.4407V7.77679Z"
+              />
+            </svg>
+          </span>
+          <span class="btn__label">Render</span>
+        </button>
+      </div>
+    </main>
     <script src="ui.js"></script>
   </body>
 </html>
-
-
